@@ -1,18 +1,7 @@
-﻿using MaterialDesignThemes.Wpf;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+using Frontier.Wif.Utilities.Extensions;
+using MaterialDesignThemes.Wpf;
 
 namespace TestUIWPF
 {
@@ -21,10 +10,28 @@ namespace TestUIWPF
     /// </summary>
     public partial class MainWindow : Window
     {
+        private readonly MainViewModel _mainViewModel;
+
         public MainWindow()
         {
             InitializeComponent();
+            DataContext = _mainViewModel = new MainViewModel();
         }
-    
+
+        public void CombinedDialogOpenedEventHandler(object sender, DialogOpenedEventArgs eventArgs)
+        {
+            CombinedCalendar.SelectedDate = _mainViewModel.Date;
+            CombinedClock.Time = _mainViewModel.Time;
+        }
+
+        public void CombinedDialogClosingEventHandler(object sender, DialogClosingEventArgs eventArgs)
+        {
+            if (Convert.ToBoolean(Convert.ToUInt16(eventArgs.Parameter)) && CombinedCalendar.SelectedDate is DateTime selectedDate)
+            {
+                DateTime combined = selectedDate.AddSeconds(CombinedClock.Time.TimeOfDay.TotalSeconds);
+                _mainViewModel.Time = combined;
+                _mainViewModel.Date = combined;
+            }
+        }
     }
 }

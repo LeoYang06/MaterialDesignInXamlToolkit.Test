@@ -2,66 +2,179 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:TestUIWPF"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-        mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
-        <StackPanel
-  Orientation="Horizontal">
-            <TextBlock
-    Text="{Binding Date, StringFormat={}{0:yyyy-MM-dd HH:mm:ss}}"
-    VerticalAlignment="Center"
-    FontSize="24" />
-            <Button
-    Margin="8 0 0 0"
-    Content="..."
-    Command="{x:Static materialDesign:DialogHost.OpenDialogCommand}"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:testUiwpf="clr-namespace:TestUIWPF"
+        Title="MainWindow"
+        Width="800"
+        Height="450"
+        d:DataContext="{d:DesignInstance testUiwpf:MainViewModel}"
+        mc:Ignorable="d">
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/Generic.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
+    <!--  方法1  -->
+    <!--<materialDesign:DialogHost DialogTheme="Inherit"
+                               Identifier="RootDialog">
+        <Grid>
+            <StackPanel HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    Orientation="Horizontal">
+                <TextBlock VerticalAlignment="Center"
+                       FontSize="24"
+                       Text="{Binding Date, StringFormat={}{0:yyyy-MM-dd HH:mm:ss}}" />
+                <Button Margin="8 0 0 0"
+                    materialDesign:DialogHost.DialogClosingAttached="CombinedDialogClosingEventHandler"
+                    materialDesign:DialogHost.DialogOpenedAttached="CombinedDialogOpenedEventHandler"
+                    Command="{x:Static materialDesign:DialogHost.OpenDialogCommand}"
+                    Content="...">
+                    <Button.CommandParameter>
+                        <Grid Margin="-1">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
 
-    materialDesign:DialogHost.DialogOpenedAttached="CombinedDialogOpenedEventHandler"
-    materialDesign:DialogHost.DialogClosingAttached="CombinedDialogClosingEventHandler">
+                            <StackPanel Grid.Row="0"
+                                    Orientation="Horizontal">
+                                <Calendar x:Name="CombinedCalendar"
+                                      Margin="-1 -4 -1 0" />
+
+                                <materialDesign:Clock x:Name="CombinedClock"
+                                                  DisplayAutomation="CycleWithSeconds"
+                                                  Is24Hours="True" />
+                            </StackPanel>
+
+                            <StackPanel Grid.Row="1"
+                                    Margin="8"
+                                    HorizontalAlignment="Right"
+                                    Orientation="Horizontal">
+                                <Button Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}"
+                                    CommandParameter="0"
+                                    Content="CANCEL"
+                                    Style="{DynamicResource MaterialDesignFlatButton}" />
+
+                                <Button Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}"
+                                    CommandParameter="1"
+                                    Content="OK"
+                                    Style="{DynamicResource MaterialDesignFlatButton}" />
+                            </StackPanel>
+                        </Grid>
+                    </Button.CommandParameter>
+                </Button>
+            </StackPanel>
+        </Grid>
+    </materialDesign:DialogHost>-->
+
+
+    <!--  方法2  -->
+    <!--<Grid>
+        <StackPanel HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    Orientation="Horizontal">
+            <TextBlock VerticalAlignment="Center"
+                       FontSize="24"
+                       Text="{Binding Date, StringFormat={}{0:yyyy-MM-dd HH:mm:ss}}" />
+            <Button Margin="8 0 0 0"
+                    materialDesign:DialogHost.DialogClosingAttached="CombinedDialogClosingEventHandler"
+                    materialDesign:DialogHost.DialogOpenedAttached="CombinedDialogOpenedEventHandler"
+                    Command="{x:Static materialDesign:DialogHost.OpenDialogCommand}"
+                    CommandTarget="{Binding ElementName=DatePickerDialogHost}"
+                    Content="...">
                 <Button.CommandParameter>
-                    <Grid
-        Margin="-1">
+                    <Grid Margin="-1">
                         <Grid.RowDefinitions>
-                            <RowDefinition
-            Height="*" />
-                            <RowDefinition
-            Height="Auto" />
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="Auto" />
                         </Grid.RowDefinitions>
-                        <StackPanel
-          Grid.Row="0"
-          Orientation="Horizontal">
-                            <Calendar
-            x:Name="CombinedCalendar"
-            Margin="-1 -4 -1 0" />
-                            <materialDesign:Clock
-            x:Name="CombinedClock"
-            DisplayAutomation="CycleWithSeconds"
-            Is24Hours="True" />
+
+                        <StackPanel Grid.Row="0"
+                                    Orientation="Horizontal">
+                            <Calendar x:Name="CombinedCalendar"
+                                      Margin="-1 -4 -1 0" />
+
+                            <materialDesign:Clock x:Name="CombinedClock"
+                                                  DisplayAutomation="CycleWithSeconds"
+                                                  Is24Hours="True" />
                         </StackPanel>
-                        <StackPanel
-          Grid.Row="1"
-          Margin="8"
-          HorizontalAlignment="Right"
-          Orientation="Horizontal">
-                            <Button
-            Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}"
-            CommandParameter="0"
-            Style="{DynamicResource MaterialDesignFlatButton}">
-                                CANCEL
-                            </Button>
-                            <Button
-            Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}"
-            CommandParameter="1"
-            Style="{DynamicResource MaterialDesignFlatButton}">
-                                OK
-                            </Button>
+
+                        <StackPanel Grid.Row="1"
+                                    Margin="8"
+                                    HorizontalAlignment="Right"
+                                    Orientation="Horizontal">
+                            <Button Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}"
+                                    CommandParameter="0"
+                                    Content="CANCEL"
+                                    Style="{DynamicResource MaterialDesignFlatButton}" />
+
+                            <Button Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}"
+                                    CommandParameter="1"
+                                    Content="OK"
+                                    Style="{DynamicResource MaterialDesignFlatButton}" />
                         </StackPanel>
                     </Grid>
                 </Button.CommandParameter>
             </Button>
         </StackPanel>
+
+        <materialDesign:DialogHost x:Name="DatePickerDialogHost">
+        </materialDesign:DialogHost>
+    </Grid>-->
+
+    <!--  方法3  -->
+    <Grid>
+        <materialDesign:DialogHost>
+            <materialDesign:DialogHost.DialogContent>
+                <Grid Margin="-1">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <StackPanel Grid.Row="0"
+                                Orientation="Horizontal">
+                        <Calendar x:Name="CombinedCalendar"
+                                  Margin="-1 -4 -1 0" />
+
+                        <materialDesign:Clock x:Name="CombinedClock"
+                                              DisplayAutomation="CycleWithSeconds"
+                                              Is24Hours="True" />
+                    </StackPanel>
+
+                    <StackPanel Grid.Row="1"
+                                Margin="8"
+                                HorizontalAlignment="Right"
+                                Orientation="Horizontal">
+                        <Button Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}"
+                                CommandParameter="0"
+                                Content="CANCEL"
+                                Style="{DynamicResource MaterialDesignFlatButton}" />
+
+                        <Button Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}"
+                                CommandParameter="1"
+                                Content="OK"
+                                Style="{DynamicResource MaterialDesignFlatButton}" />
+                    </StackPanel>
+                </Grid>
+            </materialDesign:DialogHost.DialogContent>
+
+            <StackPanel HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Orientation="Horizontal">
+                <TextBlock VerticalAlignment="Center"
+                           FontSize="24"
+                           Text="{Binding Date, StringFormat={}{0:yyyy-MM-dd HH:mm:ss}}" />
+                <Button Margin="8 0 0 0"
+                        materialDesign:DialogHost.DialogClosingAttached="CombinedDialogClosingEventHandler"
+                        materialDesign:DialogHost.DialogOpenedAttached="CombinedDialogOpenedEventHandler"
+                        Command="{x:Static materialDesign:DialogHost.OpenDialogCommand}"
+                        CommandTarget="{Binding ElementName=DatePickerDialogHost}"
+                        Content="..." />
+            </StackPanel>
+        </materialDesign:DialogHost>
     </Grid>
 </Window>
